@@ -1,5 +1,7 @@
 import networkx as nx
 import numpy as np
+from clustering import SCML
+
 
 
 def main():
@@ -26,7 +28,9 @@ def main():
             table[name].add_edge(line[0], line[1])
     for name, graph in table.items():
         print("nodes in Graph {}: {}".format(name, nx.number_of_nodes(graph)))
-
+    graph_list=[lunch,facebook,leisure,work,coauthor]
+    label=SCML(graph_list,3,0.5)
+    print (label)
 
 if __name__ == "__main__":
     main()
