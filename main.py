@@ -3,16 +3,25 @@ import numpy as np
 from clustering import SCML
 
 
+def init_graph():
+    path = './data/aucs_nodelist.txt'
+    g = nx.Graph()
+    with open(path) as f:
+        for line in f:
+            line = line.strip().split(',')
+            g.add_node(line[0])
+    return g
+
 
 def main():
     path = './data/aucs_edgelist.txt'
 
     # declare each layer's graph
-    lunch = nx.Graph()
-    facebook = nx.Graph()
-    leisure = nx.Graph()
-    work = nx.Graph()
-    coauthor = nx.Graph()
+    lunch = init_graph()
+    facebook = init_graph()
+    leisure = init_graph()
+    work = init_graph()
+    coauthor = init_graph()
     table = {
         'lunch': lunch,
         'facebook': facebook,
@@ -27,10 +36,13 @@ def main():
             name = line[2]
             table[name].add_edge(line[0], line[1])
     for name, graph in table.items():
-        print("nodes in Graph {}: {}".format(name, nx.number_of_nodes(graph)))
-    graph_list=[lunch,facebook,leisure,work,coauthor]
-    label=SCML(graph_list,3,0.5)
-    print (label)
+        print("\nGraph: {}:".format(name))
+        print("\tNumber of nodes: {}".format(nx.number_of_nodes(graph)))
+        print("\tNumber of edges: {}".format(nx.number_of_edges(graph)))
+    # graph_list=[lunch,facebook,leisure,work,coauthor]
+    # label=SCML(graph_list,3,0.5)
+    # print (label)
+
 
 if __name__ == "__main__":
     main()
