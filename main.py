@@ -16,12 +16,14 @@ def init_graph():
     return g
 
 
-def plot_elbow_k(k, sse):
+def plot_elbow(x, y, name):
     plt.figure(figsize=(8, 8))
-    plt.plot(k, sse, '-o')
-    plt.xlabel('Number of cluster')
-    plt.ylabel('Sum of Square Error')
-    plt.savefig("./results/kmeans elbow method.png")
+    plt.plot(x, y, '-o')
+    plt.xlabel('Number of cluster' if name == "Selection of k" else "alpha")
+    plt.ylabel('Sum of Square Error' if name ==
+               "Selection of k" else "Density")
+    plt.title(name)
+    plt.savefig("./results/{}.png".format(name))
 
 
 def compute_density(g, partition):
@@ -44,13 +46,13 @@ def get_score(graph_list, partitions):
         for k in range(len(partitions)):
             g_sub = g.subgraph(partitions[k])
             density[i, k] = nx.density(g_sub)
-    print("Density found for each cluster across all layers:")
-    print(np.mean(density, axis=0))
-    print("Conductance found for each cluster across all layers:")
-    print(np.mean(conductance, axis=0))
+    # print("Density found for each cluster across all layers:")
+    # print(np.mean(density, axis=0))
+    # print("Conductance found for each cluster across all layers:")
+    # print(np.mean(conductance, axis=0))
     mean_density = np.mean(np.mean(density, axis=0))
-    mean_conductance = np.mean(np.mean(conductance, axis=0))
-    return mean_density, mean_conductance
+    # mean_conductance = np.mean(np.mean(conductance, axis=0))
+    return mean_density
 
 
 def main():
@@ -85,26 +87,34 @@ def main():
     graph_list = [lunch, facebook, leisure, work, coauthor]
     node_list = list(lunch.nodes)
 
-    # Tunning k and alpha
-    # print("--------------------------------------------------Perform k clusters selection--------------------------------------------------")
-    # sse_list = []
-    # range_k = np.arange(2, 15)
-    # for k in range_k:
-    #     labels, matrix, sse = SCML(graph_list, k, 0.5)
-    #     score = silhouette_score(matrix, labels, random_state=42)
-    #     print("Clusters = {}".format(k),
-    #           ",Silhouette Score = {}".format(round(score, 5)))
-    #     sse_list.append(sse)
+    # Tunning k
+    print("--------------------------------------------------Perform k clusters selection--------------------------------------------------")
+    sse_list = []
+    range_k = np.arange(2, 15)
+    for k in range_k:
+        labels, matrix, sse = SCML(graph_list, k, 0.5)
+        score = silhouette_score(matrix, labels, random_state=42)
+        print("Number of clusters k = {}".format(k),
+              ",Silhouette Score = {}".format(round(score, 5)))
+        sse_list.append(sse)
 
-    # Plot elbow method
-    # plot_elbow_k(range_k, sse_list)
+    # Plot elbow method for k
+    plot_elbow(range_k, sse_list, "Selection of k")
 
     # Tunning alpha
-    # range_a = np.arange(0.2,1.1,0.1)
-    # for alpha in range_a:
-    #     label = SCML(graph_list, 8, alpha)
-    #     print(label)
-    #     print(Counter(label))
+    print("--------------------------------------------------Perform alpha selection--------------------------------------------------")
+    range_a = np.arange(0.2, 1.1, 0.1)
+    den = []
+    for alpha in range_a:
+        labels, matrix, sse = SCML(graph_list, 8, alpha)
+        partitions = get_partition(labels, node_list)
+        density = get_score(graph_list, partitions)
+        den.append(density)
+        print("Alpha = {}".format(round(alpha, 1)),
+              ", Density = {}".format(density))
+
+    # Plot elbow method for alpha
+    plot_elbow(range_a, den, "Selection of alpha")
 
     # Select the best model
     labels, matrix, sse = SCML(graph_list, 8, 0.5)
