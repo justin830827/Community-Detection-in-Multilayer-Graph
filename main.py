@@ -38,7 +38,7 @@ def main():
             name = line[2]
             table[name].add_edge(line[0], line[1])
     for name, graph in table.items():
-        print("\nGraph: {}:".format(name))
+        print("\nGraph: {}".format(name))
         print("\tNumber of nodes: {}".format(nx.number_of_nodes(graph)))
         print("\tNumber of edges: {}".format(nx.number_of_edges(graph)))
     graph_list = [lunch, facebook, leisure, work, coauthor]
