@@ -69,10 +69,24 @@ def main():
     # Plot elbow method
     plot_elbow_k(range_k, sse_list)
 
-    # for alpha in np.arange(2, 10):
-    #     label = SCML(graph_list, 6, alpha)
-    #     print(label)
-    #     print(Counter(label))
+    # Tunning alpha
+    range_a = np.arange(0.2,1.1,0.1)
+    for alpha in range_a:
+        label = SCML(graph_list, 8, alpha)
+        print(label)
+        print(Counter(label))
+
+    # Select the best model
+    labels, matrix, sse = SCML(graph_list, 8, 0.5)
+
+    # Evaluation of clustring
+    print("--------------------------------------------------Clustering evaluation--------------------------------------------------")
+    db_index = round(davies_bouldin_score(matrix, labels), 5)
+    ch_index = round(calinski_harabasz_score(matrix, labels), 5)
+    s_coef = round(silhouette_score(matrix, labels, metric='euclidean'), 5)
+    print("Silhouette Score: {}".format(s_coef))
+    print("Davies-Bouldin Score: {}".format(db_index))
+    print("Calinski-Harabaz Score: {}".format(ch_index))
 
 
 if __name__ == "__main__":
