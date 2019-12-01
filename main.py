@@ -39,9 +39,9 @@ def main():
         print("\nGraph: {}:".format(name))
         print("\tNumber of nodes: {}".format(nx.number_of_nodes(graph)))
         print("\tNumber of edges: {}".format(nx.number_of_edges(graph)))
-    # graph_list=[lunch,facebook,leisure,work,coauthor]
-    # label=SCML(graph_list,3,0.5)
-    # print (label)
+    graph_list=[lunch,facebook,leisure,work,coauthor]
+    label=SCML(graph_list,3,0.5)
+#    print (label)
 
 
 if __name__ == "__main__":

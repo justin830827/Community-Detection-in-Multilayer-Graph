@@ -6,16 +6,21 @@
 
 import networkx as nx
 import numpy as np
-from scipy.cluster.vq import kmeans
+from scipy.cluster.vq import kmeans2
 from scipy.sparse import csr_matrix
-
+from sklearn import preprocessing
 
 # In[5]:
 
 
 def getU(lap,k):
     #print(lap)
-    eig_val, eig_vec = np.linalg.eig(lap.toarray())
+    eig_val=eig_vec=None
+    if type(lap).__module__!='numpy':
+#        print(type(lap))
+        eig_val, eig_vec = np.linalg.eig(lap.toarray())
+    else:
+        eig_val, eig_vec = np.linalg.eig(lap)
 #    print(eig_val,eig_vec)
     top_indices = np.argsort(eig_val)[-k:]
     top_vecs = [eig_vec[:,i].transpose() for i in top_indices]
@@ -51,27 +56,15 @@ def SCML(G,k,alpha):
 
     U = getU(Lmod, k).real.todense()
        
-    U = normalize(U, axis=1, norm='l1')
+    U = preprocessing.normalize(U, axis=1, norm='l1')
      
 
-    centroids, labels = kmeans(U,k,iter=20)
-
+    centroids, labels = kmeans2(U,k,iter=20)
+    print (centroids)
+    print(labels)
+    print(len(labels))
     return labels
 
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
 
 
 
