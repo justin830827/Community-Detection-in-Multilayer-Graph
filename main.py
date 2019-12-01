@@ -24,6 +24,35 @@ def plot_elbow_k(k, sse):
     plt.savefig("./results/kmeans elbow method.png")
 
 
+def compute_density(g, partition):
+    density = [nx.density(g.subgraph(p)) for p in partition]
+    return np.mean(density)
+
+
+def get_partition(labels, nodes):
+    num_part = len(set(labels))
+    part = [[] for i in range(num_part)]
+    for i in range(len(labels)):
+        part[labels[i]].append(nodes[i])
+    return part
+
+
+def get_score(graph_list, partitions):
+    density = np.zeros((len(graph_list), len(partitions)))
+    conductance = np.zeros((len(graph_list), len(partitions)))
+    for i, g in enumerate(graph_list):
+        for k in range(len(partitions)):
+            g_sub = g.subgraph(partitions[k])
+            density[i, k] = nx.density(g_sub)
+    print("Density found for each cluster across all layers:")
+    print(np.mean(density, axis=0))
+    print("Conductance found for each cluster across all layers:")
+    print(np.mean(conductance, axis=0))
+    mean_density = np.mean(np.mean(density, axis=0))
+    mean_conductance = np.mean(np.mean(conductance, axis=0))
+    return mean_density, mean_conductance
+
+
 def main():
     path = './data/aucs_edgelist.txt'
 
@@ -54,39 +83,42 @@ def main():
         print("\tNumber of edges: {}".format(nx.number_of_edges(graph)))
 
     graph_list = [lunch, facebook, leisure, work, coauthor]
+    node_list = list(lunch.nodes)
 
     # Tunning k and alpha
-    print("--------------------------------------------------Perform k clusters selection--------------------------------------------------")
-    sse_list = []
-    range_k = np.arange(2, 15)
-    for k in range_k:
-        labels, matrix, sse = SCML(graph_list, k, 0.5)
-        score = silhouette_score(matrix, labels, random_state=42)
-        print("Clusters = {}".format(k),
-              ",Silhouette Score = {}".format(round(score, 5)))
-        sse_list.append(sse)
+    # print("--------------------------------------------------Perform k clusters selection--------------------------------------------------")
+    # sse_list = []
+    # range_k = np.arange(2, 15)
+    # for k in range_k:
+    #     labels, matrix, sse = SCML(graph_list, k, 0.5)
+    #     score = silhouette_score(matrix, labels, random_state=42)
+    #     print("Clusters = {}".format(k),
+    #           ",Silhouette Score = {}".format(round(score, 5)))
+    #     sse_list.append(sse)
 
     # Plot elbow method
-    plot_elbow_k(range_k, sse_list)
+    # plot_elbow_k(range_k, sse_list)
 
     # Tunning alpha
-    range_a = np.arange(0.2,1.1,0.1)
-    for alpha in range_a:
-        label = SCML(graph_list, 8, alpha)
-        print(label)
-        print(Counter(label))
+    # range_a = np.arange(0.2,1.1,0.1)
+    # for alpha in range_a:
+    #     label = SCML(graph_list, 8, alpha)
+    #     print(label)
+    #     print(Counter(label))
 
     # Select the best model
     labels, matrix, sse = SCML(graph_list, 8, 0.5)
+    partitions = get_partition(labels, node_list)
+    get_score(graph_list, partitions)
 
     # Evaluation of clustring
-    print("--------------------------------------------------Clustering evaluation--------------------------------------------------")
-    db_index = round(davies_bouldin_score(matrix, labels), 5)
-    ch_index = round(calinski_harabasz_score(matrix, labels), 5)
-    s_coef = round(silhouette_score(matrix, labels, metric='euclidean'), 5)
-    print("Silhouette Score: {}".format(s_coef))
-    print("Davies-Bouldin Score: {}".format(db_index))
-    print("Calinski-Harabaz Score: {}".format(ch_index))
+    # print("--------------------------------------------------Clustering evaluation--------------------------------------------------")
+    # db_index = round(davies_bouldin_score(matrix, labels), 5)
+    # ch_index = round(calinski_harabasz_score(matrix, labels), 5)
+    # s_coef = round(silhouette_score(matrix, labels, metric='euclidean'), 5)
+    # print("Silhouette Score: {}".format(s_coef))
+    # print("Davies-Bouldin Score: {}".format(db_index))
+    # print("Calinski-Harabaz Score: {}".format(ch_index))
 
 
 if __name__ == "__main__":
