@@ -48,6 +48,14 @@ def main():
     label=SCML(graph_list,7,0.5)
     print(label)
     print(Counter(label))
-        
+    labels, values = zip(*Counter(label).items())
+
+    indexes = np.arange(len(labels))
+    width = 1
+
+    plt.bar(indexes, values, width)
+    plt.xticks(indexes + width * 0.5, labels)
+    plt.show()
+
 if __name__ == "__main__":
     main()
