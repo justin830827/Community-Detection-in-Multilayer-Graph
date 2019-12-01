@@ -51,4 +51,4 @@ def SCML(G, k, alpha):
                     n_init=30, random_state=1).fit(U)
     labels = kmeans.predict(U)
     sse = kmeans.inertia_
-    return labels, U, sse
+    return labels, sse
