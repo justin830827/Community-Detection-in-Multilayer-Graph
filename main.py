@@ -3,6 +3,7 @@ import numpy as np
 from algo import SCML
 import matplotlib.pyplot as plt
 from collections import Counter
+from sklearn.metrics import *
 
 
 def init_graph():
@@ -15,10 +16,18 @@ def init_graph():
     return g
 
 
+def plot_elbow_k(k, sse):
+    plt.figure(figsize=(8, 8))
+    plt.plot(k, sse, '-o')
+    plt.xlabel('Number of cluster')
+    plt.ylabel('Sum of Square Error')
+    plt.savefig("./results/kmeans elbow method.png")
+
+
 def main():
     path = './data/aucs_edgelist.txt'
 
-    # declare each layer's graph
+    # Declare each layer's graph
     lunch = init_graph()
     facebook = init_graph()
     leisure = init_graph()
@@ -32,6 +41,8 @@ def main():
         'coauthor': coauthor,
     }
 
+    # Load data into graph
+    print("--------------------------------------------------Load multilayers graph--------------------------------------------------")
     with open(path) as f:
         for line in f:
             line = line.strip().split(',')
@@ -41,12 +52,27 @@ def main():
         print("\nGraph: {}".format(name))
         print("\tNumber of nodes: {}".format(nx.number_of_nodes(graph)))
         print("\tNumber of edges: {}".format(nx.number_of_edges(graph)))
+
     graph_list = [lunch, facebook, leisure, work, coauthor]
 
-    label = SCML(graph_list, 7, 0.5)
-    print(label)
-    print(Counter(label))
-    labels, values = zip(*Counter(label).items())
+    # Tunning k and alpha
+    print("--------------------------------------------------Perform k clusters selection--------------------------------------------------")
+    sse_list = []
+    range_k = np.arange(2, 15)
+    for k in range_k:
+        labels, matrix, sse = SCML(graph_list, k, 0.5)
+        score = silhouette_score(matrix, labels, random_state=42)
+        print("Clusters = {}".format(k),
+              ",Silhouette Score = {}".format(round(score, 5)))
+        sse_list.append(sse)
+
+    # Plot elbow method
+    plot_elbow_k(range_k, sse_list)
+
+    # for alpha in np.arange(2, 10):
+    #     label = SCML(graph_list, 6, alpha)
+    #     print(label)
+    #     print(Counter(label))
 
 
 if __name__ == "__main__":

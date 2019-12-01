@@ -3,6 +3,7 @@
 
 import networkx as nx
 import numpy as np
+from sklearn.cluster import KMeans
 from scipy.cluster.vq import kmeans2
 from scipy.sparse import csr_matrix
 from sklearn import preprocessing
@@ -46,5 +47,8 @@ def SCML(G, k, alpha):
 
     U = preprocessing.normalize(U, axis=1, norm='l1')
 
-    centroids, labels = kmeans2(U, k, iter=20)
-    return labels
+    kmeans = KMeans(init='k-means++', n_clusters=k,
+                    n_init=30, random_state=1).fit(U)
+    labels = kmeans.predict(U)
+    sse = kmeans.inertia_
+    return labels, U, sse
