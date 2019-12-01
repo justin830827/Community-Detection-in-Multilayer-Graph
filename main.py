@@ -1,8 +1,8 @@
 import networkx as nx
 import numpy as np
 from clustering import SCML
-
-
+import matplotlib.pyplot as plt
+from collections import Counter
 def init_graph():
     path = './data/aucs_nodelist.txt'
     g = nx.Graph()
@@ -40,9 +40,14 @@ def main():
         print("\tNumber of nodes: {}".format(nx.number_of_nodes(graph)))
         print("\tNumber of edges: {}".format(nx.number_of_edges(graph)))
     graph_list=[lunch,facebook,leisure,work,coauthor]
-    label=SCML(graph_list,3,0.5)
-#    print (label)
 
-
+    #for i in range(2,11):
+    #    label=SCML(graph_list,i,0.5)
+        
+    #    print (label)
+    label=SCML(graph_list,7,0.5)
+    print(label)
+    print(Counter(label))
+        
 if __name__ == "__main__":
     main()

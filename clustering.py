@@ -60,9 +60,9 @@ def SCML(G,k,alpha):
      
 
     centroids, labels = kmeans2(U,k,iter=20)
-    print (centroids)
-    print(labels)
-    print(len(labels))
+#    print (centroids)
+#    print(labels)
+#    print(len(labels))
     return labels
 
 
