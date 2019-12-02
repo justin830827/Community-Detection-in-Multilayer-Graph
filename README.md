@@ -33,7 +33,7 @@ After the program complete, the results of program will display on terminal and 
 
 ## Description of Dataset
 
-This dataset is downloaded from [link](http://multilayer.it.uu.se/datasets.html). In this graph, the multiple layers represent relationships between 61 employees of a University department in five different aspects: (i) coworking, (ii) having lunch together, (iii) Facebook friendship, (iv) o✏ine friendship (having fun together), and (v) coauthor-ship.
+This dataset is downloaded from [link](http://multilayer.it.uu.se/datasets.html). In this graph, the multiple layers represent relationships between 61 employees of a University department in five different aspects: (i) coworking, (ii) having lunch together, (iii) Facebook friendship, (iv) offline friendship (having fun together), and (v) coauthor-ship.
 
 #### Dataset Name: AUCS
 
