@@ -116,7 +116,7 @@ def main():
         print("\tNumber of nodes: {}".format(nx.number_of_nodes(graph)))
         print("\tNumber of edges: {}".format(nx.number_of_edges(graph)))
 
-    graph_list = [lunch, work,coauthor,leisure]
+    graph_list = [lunch, work, coauthor, leisure]
     node_list = list(lunch.nodes)
 
     # # Tunning k
@@ -137,61 +137,38 @@ def main():
     print("--------------------------------------------------Perform alpha selection--------------------------------------------------")
     range_a = np.arange(0.2, 1.1, 0.1)
     den = []
+    nmi_list = []
     for alpha in range_a:
-        labels, sse = SCML(graph_list, 8, alpha)
+        labels = SCML(graph_list, 8, alpha)
         partitions = get_partition(labels, node_list)
         density = get_score(graph_list, partitions)
         den.append(density)
-        print("Alpha = {}".format(round(alpha, 1)),
-              ", Density = {}".format(density))
+        print("\nAlpha = {}".format(round(alpha, 1)))
+        print("\tDensity = {}".format(density))
+        nmi_value = nmi(truth, labels)
+        print("\tNMI = {}".format(nmi_value))
+        nmi_list.append(nmi_value)
 
     # Plot elbow method for alpha
-    plot_elbow(range_a, den, "Selection of alpha")
+    plot_elbow(range_a, den, "Selection of alpha (Density)")
+    plot_elbow(range_a, nmi_list, "Selection of alpha (NMI)")
 
     # Select the best model
-    labels, sse = SCML(graph_list, 8, 0.6)
+    print("--------------------------------------------------Multilayer Result--------------------------------------------------")
+    labels = SCML(graph_list, 8, 0.2)
     partitions = get_partition(labels, node_list)
-    # print(labels)
-    # print(np.array(truth))
 
     print("NMI: {}".format(nmi(truth, labels)))
     purity = purity_score(truth, labels)
     print("Purity: {}".format(purity))
-    print('====================================one layer===================================')
-    print('lunch')
-    labels,sse=onelayer(lunch,8)
-    print(labels)
-    print("NMI: {}".format(nmi(truth, labels)))
-    purity = purity_score(truth, labels)
-    print("Purity: {}".format(purity))
-
-    print('facebook')
-    labels,sse=onelayer(facebook,8)
-    print(labels)
-    print("NMI: {}".format(nmi(truth, labels)))
-    purity = purity_score(truth, labels)
-    print("Purity: {}".format(purity))
-
-    print('work')
-    labels,sse=onelayer(work,8)
-    print(labels)
-    print("NMI: {}".format(nmi(truth, labels)))
-    purity = purity_score(truth, labels)
-    print("Purity: {}".format(purity))
-
-    print('coauthor')
-    labels,sse=onelayer(coauthor,8)
-    print(labels)
-    print("NMI: {}".format(nmi(truth, labels)))
-    purity = purity_score(truth, labels)
-    print("Purity: {}".format(purity))
-
-    print('leisure')
-    labels,sse=onelayer(leisure,8)
-    print(labels)
-    print("NMI: {}".format(nmi(truth, labels)))
-    purity = purity_score(truth, labels)
-    print("Purity: {}".format(purity))
+    print("--------------------------------------------------Single layer Result--------------------------------------------------")
+    for name, g in table.items():
+        print("\nLayer: {}".format(name))
+        labels = onelayer(g, 8)
+        # print(labels)
+        print("\tNMI: {}".format(nmi(truth, labels)))
+        purity = purity_score(truth, labels)
+        print("\tPurity: {}".format(purity))
 
 
 if __name__ == "__main__":
