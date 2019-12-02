@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 from algo import SCML
+from algo import onelayer
 import matplotlib.pyplot as plt
 from collections import Counter
 from sklearn.metrics import v_measure_score as nmi
@@ -115,7 +116,7 @@ def main():
         print("\tNumber of nodes: {}".format(nx.number_of_nodes(graph)))
         print("\tNumber of edges: {}".format(nx.number_of_edges(graph)))
 
-    graph_list = [lunch, work, facebook]
+    graph_list = [lunch, work,coauthor,leisure]
     node_list = list(lunch.nodes)
 
     # # Tunning k
@@ -153,6 +154,41 @@ def main():
     # print(labels)
     # print(np.array(truth))
 
+    print("NMI: {}".format(nmi(truth, labels)))
+    purity = purity_score(truth, labels)
+    print("Purity: {}".format(purity))
+    print('====================================one layer===================================')
+    print('lunch')
+    labels,sse=onelayer(lunch,8)
+    print(labels)
+    print("NMI: {}".format(nmi(truth, labels)))
+    purity = purity_score(truth, labels)
+    print("Purity: {}".format(purity))
+
+    print('facebook')
+    labels,sse=onelayer(facebook,8)
+    print(labels)
+    print("NMI: {}".format(nmi(truth, labels)))
+    purity = purity_score(truth, labels)
+    print("Purity: {}".format(purity))
+
+    print('work')
+    labels,sse=onelayer(work,8)
+    print(labels)
+    print("NMI: {}".format(nmi(truth, labels)))
+    purity = purity_score(truth, labels)
+    print("Purity: {}".format(purity))
+
+    print('coauthor')
+    labels,sse=onelayer(coauthor,8)
+    print(labels)
+    print("NMI: {}".format(nmi(truth, labels)))
+    purity = purity_score(truth, labels)
+    print("Purity: {}".format(purity))
+
+    print('leisure')
+    labels,sse=onelayer(leisure,8)
+    print(labels)
     print("NMI: {}".format(nmi(truth, labels)))
     purity = purity_score(truth, labels)
     print("Purity: {}".format(purity))

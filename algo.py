@@ -52,3 +52,15 @@ def SCML(G, k, alpha):
     labels = kmeans.predict(U)
     sse = kmeans.inertia_
     return labels, sse
+
+
+def onelayer(g,k):
+    lap=nx.normalized_laplacian_matrix(g)
+    U=getU(lap,k).real.todense()
+    U = preprocessing.normalize(U, axis=1, norm='l1')
+    kmeans = KMeans(init='k-means++', n_clusters=k,
+                    n_init=30, random_state=1).fit(U)
+    labels = kmeans.predict(U)
+    sse = kmeans.inertia_
+    return labels, sse
+
