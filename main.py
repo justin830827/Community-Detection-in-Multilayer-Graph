@@ -154,7 +154,7 @@ def main():
     plot_elbow(range_a, nmi_list, "Selection of alpha (NMI)")
 
     # Select the best model
-    print("--------------------------------------------------Multilayer Result--------------------------------------------------")
+    print("--------------------------------------------------Multilayer Result---------------------------------------------------")
     labels = SCML(graph_list, 8, 0.2)
     partitions = get_partition(labels, node_list)
 
