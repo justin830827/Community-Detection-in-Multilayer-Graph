@@ -147,6 +147,7 @@ Layer: coauthor
 
 ## Reference
 
-1. Dong, Xiaowen, et al. "Clustering on multi-layer graphs via subspace analysis on Grassmann manifolds." IEEE Transactions on signal processing 62.4 (2013): 905-918.
-2. Kim, Jungeun, and Jae-Gil Lee. "Community detection in multi-layer graphs: A survey." ACM SIGMOD Record 44.3 (2015): 37-48.
+
+1. Kim, Jungeun, and Jae-Gil Lee. "Community detection in multi-layer graphs: A survey." ACM SIGMOD Record 44.3 (2015): 37-48.
+2. Dong, Xiaowen, et al. "Clustering on multi-layer graphs via subspace analysis on Grassmann manifolds." IEEE Transactions on signal processing 62.4 (2013): 905-918.
 3. Zhang, Pan. "Evaluating accuracy of community detection using the relative normalized mutual information." Journal of Statistical Mechanics: Theory and Experiment 2015.11 (2015): P11006.
